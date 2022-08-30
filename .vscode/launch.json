@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Listen for Xdebug on Docker",
+            "type": "php",
+            "request": "launch",
+            "port": 9005,
+            "log": true,
+            "ignore": ["**/vendor/**/*.php"],
+            "pathMappings": {
+                "/var/www/app/": "${workspaceFolder}"
+            }
+        }
+    ]
+}
