@@ -11,8 +11,9 @@ ifeq ($(uname_OS),Darwin)
 	user_GID := 1001
 endif
 
+docker_folder := $(if $(docker_folder),$(docker_folder),./docker)
 # Passing the >_ options option
-options := $(if $(options),$(options),--env-file ./docker/.env)
+options := $(if $(options),$(options),--env-file $(docker_folder)/.env)
 # Passing the >_ up_options option
 up_options := $(if $(up_options),$(up_options),--force-recreate --no-build --no-deps)
 # Passing the >_ common_options option
@@ -73,9 +74,9 @@ docker/build/app:
 	@echo $(call message_info, Build an image APP... 🏗)
 	@echo
 	docker-compose \
-		-f ./docker/php/services/app/docker-compose.yml \
+		-f $(docker_folder)/php/services/app/docker-compose.yml \
 		--ansi=auto \
-		--env-file ./docker/.env \
+		--env-file $(docker_folder)/.env \
 		build --progress=plain app
 
 .PHONY: docker/app/up
@@ -84,7 +85,7 @@ docker/app/up:
 	@echo
 	@echo $(call message_info, Running APP Container... 🚀)
 	@echo
-	@$(MAKE) -f docker/Makefile --no-print-directory docker/service/up context="php/services/app" up_options="--force-recreate --no-deps"
+	@$(MAKE) -f $(docker_folder)/Makefile --no-print-directory docker/service/up context="php/services/app" up_options="--force-recreate --no-deps"
 
 .PHONY: docker/queue/up
 docker/queue/up:
@@ -92,7 +93,7 @@ docker/queue/up:
 	@echo
 	@echo $(call message_info, Running QUEUE Container... 🚀)
 	@echo
-	@$(MAKE) -f docker/Makefile --no-print-directory docker/service/up context="php/services/queue"
+	@$(MAKE) -f $(docker_folder)/Makefile --no-print-directory docker/service/up context="php/services/queue"
 
 .PHONY: docker/scheduler/up
 docker/scheduler/up:
@@ -100,21 +101,21 @@ docker/scheduler/up:
 	@echo
 	@echo $(call message_info, Running SCHEDULER Container... 🚀)
 	@echo
-	@$(MAKE) -f docker/Makefile --no-print-directory docker/service/up context="php/services/scheduler"
+	@$(MAKE) -f $(docker_folder)/Makefile --no-print-directory docker/service/up context="php/services/scheduler"
 
 .PHONY: docker/database/up
 docker/database/up:
 	@echo
 	@echo $(call message_info, Running Docker Database... 🚀)
 	@echo
-	@$(MAKE) -f docker/Makefile --no-print-directory docker/service/up context=mysql up_options="--force-recreate --detach"
+	@$(MAKE) -f $(docker_folder)/Makefile --no-print-directory docker/service/up context=mysql up_options="--force-recreate --detach"
 
 .PHONY: docker/redis/up
 docker/redis/up:
 	@echo
 	@echo $(call message_info, Running Docker Redis... 🚀)
 	@echo
-	@$(MAKE) -f docker/Makefile --no-print-directory docker/service/up context=redis up_options="--force-recreate --detach"
+	@$(MAKE) -f $(docker_folder)/Makefile --no-print-directory docker/service/up context=redis up_options="--force-recreate --detach"
 
 # make  docker/service/up \
 		context=FOLDER_IN_SERVICES \
@@ -123,7 +124,7 @@ docker/redis/up:
 		services="services_in_docker_compose"
 .PHONY: docker/service/up
 docker/service/up:
-	@docker-compose -f ./docker/$(context)/docker-compose.yml \
+	@docker-compose -f $(docker_folder)/$(context)/docker-compose.yml \
 		$(options) $(common_options) \
 		up $(up_options) \
 		$(if $(services),$(services),)
@@ -134,9 +135,9 @@ docker/up:
 	@echo
 	@echo $(call message_info, Running Docker Application... 🚀)
 	@echo
-	@docker-compose -f ./docker/docker-compose.yml up
-	@$(MAKE) -f docker/Makefile --no-print-directory docker/database/up
-	@$(MAKE) -f docker/Makefile --no-print-directory docker/healthcheck container=$(if $(database_container),$(database_container),app_database)
-	@$(MAKE) -f docker/Makefile --no-print-directory docker/redis/up
-	@$(MAKE) -f docker/Makefile --no-print-directory docker/healthcheck container=$(if $(redis_container),$(redis_container),app_redis)
-	@$(MAKE) -f docker/Makefile --no-print-directory docker/app/up
+	@docker-compose -f $(docker_folder)/docker-compose.yml up
+	@$(MAKE) -f $(docker_folder)/Makefile --no-print-directory docker/database/up
+	@$(MAKE) -f $(docker_folder)/Makefile --no-print-directory docker/healthcheck container=$(if $(database_container),$(database_container),app_database)
+	@$(MAKE) -f $(docker_folder)/Makefile --no-print-directory docker/redis/up
+	@$(MAKE) -f $(docker_folder)/Makefile --no-print-directory docker/healthcheck container=$(if $(redis_container),$(redis_container),app_redis)
+	@$(MAKE) -f $(docker_folder)/Makefile --no-print-directory docker/app/up
