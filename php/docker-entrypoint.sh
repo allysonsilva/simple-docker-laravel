@@ -126,7 +126,15 @@ php --ini
 
 if [ "$CONTAINER_ROLE" = "APP" ]; then
 
-    exec php artisan serve --host=0.0.0.0 --port=8000
+    if [[ ${WITH_OCTANE:-false} == true ]]; then
+        printf "\033[34m[$CONTAINER_ROLE] Running with Laravel Octane ...\033[0m\n"
+
+        exec /usr/local/bin/php -d variables_order=EGPCS artisan octane:start --server=swoole --max-requests=100000 --host=0.0.0.0 --port=8000
+    fi
+
+    printf "\033[34m[$CONTAINER_ROLE] Running with Laravel Serve ...\033[0m\n"
+
+    exec /usr/local/bin/php -d variables_order=GPCS artisan serve --host=0.0.0.0 --port=8000
 
 elif [ "$CONTAINER_ROLE" = "QUEUE" ]; then
     printf "\n\033[34m[$CONTAINER_ROLE] Running the [QUEUE-WORKER] Service ...\033[0m\n"

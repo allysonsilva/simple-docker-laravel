@@ -144,6 +144,8 @@ RUN set -xe; \
         xdebug-3.1.5 \
         pcov-1.0.11 \
     ; \
+        pecl install -o -f -D 'enable-sockets="yes" enable-openssl="yes" enable-http2="yes" enable-mysqlnd="yes" enable-swoole-json="yes" enable-swoole-curl="yes" enable-cares="no"' swoole-4.8.12 \
+    ; \
     \
     # Igbinary: Is a drop in replacement for the standard php serializer.
     # MessagePack: Is an efficient binary serialization format.
@@ -163,6 +165,7 @@ RUN set -xe; \
         amqp \
         xdebug \
         pcov \
+        swoole \
         igbinary \
         msgpack \
         redis \
@@ -339,6 +342,11 @@ RUN set -xe \
 VOLUME ${LOG_PATH}
 
 ENTRYPOINT ["/sbin/tini", "--", "/entrypoint.sh"]
+
+# HEALTHCHECK --start-period=5s --interval=30s --timeout=5s --retries=3 CMD php artisan octane:status || exit 1
+
+# # Override stop signal to stop process gracefully
+# STOPSIGNAL SIGQUIT
 
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
