@@ -27,10 +27,10 @@ services:
         ports:
             - ${DOCKER_PHP_APP_PORT:-8088}:8000
         volumes:
+            # - ${DOCKER_PHP_PATH}/configs/conf.d/opcache.ini:/usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
             - ${DOCKER_PHP_PATH}/docker-entrypoint.sh:/entrypoint.sh:ro
             - ${DOCKER_PHP_PATH}/configs/php-local.ini:/usr/local/etc/php/php.ini
             - ${ROOT_PATH}:/var/www/app:delegated
-            # - ${DOCKER_PHP_PATH}/configs/conf.d/opcache.ini:/usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
             - type: volume
               source: app_logs
               target: /usr/local/var/log
