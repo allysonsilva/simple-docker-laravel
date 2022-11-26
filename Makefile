@@ -85,7 +85,15 @@ docker/app/up:
 	@echo
 	@echo $(call message_info, Running APP Container... 🚀)
 	@echo
-	@$(MAKE) -f $(docker_folder)/Makefile --no-print-directory docker/service/up context="php/services/app" up_options="--force-recreate --no-deps"
+	@$(MAKE) -f $(docker_folder)/Makefile --no-print-directory docker/service/up context="php/services/app" up_options="--force-recreate --detach --no-deps"
+
+.PHONY: docker/minio/up
+docker/minio/up:
+# make -f docker/Makefile docker/minio/up
+	@echo
+	@echo $(call message_info, Running MinIO Container... 🗄)
+	@echo
+	@$(MAKE) -f $(docker_folder)/Makefile --no-print-directory docker/service/up context="minio" up_options="--force-recreate --detach --no-deps"
 
 .PHONY: docker/queue/up
 docker/queue/up:
