@@ -21,7 +21,7 @@ services:
             - ./my.cnf:/etc/mysql/conf.d/my.cnf:ro
             - mysql_data:/var/lib/mysql
         env_file:
-            - .env.container
+            - .env
         networks:
             external_network:
         # Graceful shutdown

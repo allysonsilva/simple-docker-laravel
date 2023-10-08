@@ -48,6 +48,11 @@ docker/config-env:
 	@cd docker && sed -i "/# USER_UID=.*/c\USER_UID=$(user_UID)" .env
 	@cd docker && sed -i "/# USER_GID=.*/c\USER_GID=$(user_GID)" .env
 	@cd docker && sed -i "/^# CURRENT_UID/c\CURRENT_UID=${current_uid}" .env
+	@cd docker && cp .envrc.example .envrc
+	@cd docker/mysql && cp .env.container .env
+	@cd docker/php/services/app && cp .env.container .env
+	@cd docker/php/services/queue && cp .env.container .env
+	@cd docker/php/services/scheduler && cp .env.container .env
 	@echo
 	@echo $(call message_success, Run \`make docker/config-env\` successfully executed)
 

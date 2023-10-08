@@ -23,6 +23,7 @@ RUN set -xe \
             --optimize-autoloader \
             --ignore-platform-reqs \
             --prefer-dist \
+            --no-dev \
             --ansi \
             --profile \
             --no-cache \
@@ -324,10 +325,10 @@ RUN set -xe \
 RUN set -xe \
     && php artisan optimize:clear --ansi || true \
     \
+    && composer run-script post-autoload-dump || true \
     && composer run-script post-root-package-install || true \
     && composer run-script post-create-project-cmd || true \
-    && composer dump-autoload --optimize --classmap-authoritative --no-dev --ansi || true \
-    && composer run-script post-autoload-dump || true
+    && composer dump-autoload --optimize --classmap-authoritative --no-dev --ansi || true
 
 RUN set -xe \
     && sudo chmod a+x artisan \

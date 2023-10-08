@@ -35,7 +35,7 @@ services:
               source: app_logs
               target: /usr/local/var/log
         env_file:
-            - ${DOCKER_PHP_APP_PATH}/.env.container
+            - ${DOCKER_PHP_APP_PATH}/.env
             # # Uncomment the line below to configure the environment variables for the application tests
             # - ${DOCKER_PHP_APP_PATH}/.env.testing.container
         restart: on-failure:3

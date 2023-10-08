@@ -13,8 +13,8 @@ services:
         hostname: ${CONTAINER_NAME_PREFIX}_scheduler
         container_name: ${CONTAINER_NAME_PREFIX}_scheduler
         env_file:
-            - ${DOCKER_PHP_APP_PATH}/.env.container
-            - ${DOCKER_PHP_SCHEDULER_PATH}/.env.container
+            - ${DOCKER_PHP_APP_PATH}/.env
+            - ${DOCKER_PHP_SCHEDULER_PATH}/.env
         volumes:
             - ${DOCKER_PHP_PATH}/docker-entrypoint.sh:/entrypoint.sh:ro
             - ${ROOT_PATH}:/var/www/app:delegated
