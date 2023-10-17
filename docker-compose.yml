@@ -10,6 +10,6 @@ services:
     hello-world:
         image: hello-world:latest
         hostname: hello-world
-        container_name: hello-world
+        container_name: ${CONTAINER_NAME_PREFIX}_hello-world
         networks:
             compose_network:
